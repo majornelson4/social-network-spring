@@ -20,13 +20,13 @@ public class CommentController {
     CommentService commentService;
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<CommentDto> findCommentById(@PathVariable Integer postId, @PathVariable Integer commentId) {
+    public CommentDto findCommentById(@PathVariable Integer postId, @PathVariable Integer commentId) {
         CommentDto commentDto = commentService.findCommentById(postId, commentId);
-        return ResponseEntity.ok(commentDto);
+        return commentDto;
     }
     @GetMapping
-    public ResponseEntity<Set<CommentDto>> findAllComments(@PathVariable Integer postId) {
-        return ResponseEntity.ok(commentService.findAllComments(postId));
+    public Set<CommentDto> findAllComments(@PathVariable Integer postId) {
+        return commentService.findAllComments(postId);
     }
     @PostMapping
     public ResponseEntity<CommentDto> createComment(@PathVariable Integer postId, @Valid @RequestBody CommentDto commentRequest) {
@@ -34,14 +34,13 @@ public class CommentController {
         return new ResponseEntity<>(commentDto, HttpStatus.CREATED);
     }
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentDto> updateComment(@PathVariable Integer postId, @PathVariable Integer commentId, @Valid @RequestBody CommentDto commentRequest) {
-        CommentDto commentDto = commentService.updateComment(postId, commentId, commentRequest);
-        return ResponseEntity.ok(commentDto);
+    public CommentDto updateComment(@PathVariable Integer postId, @PathVariable Integer commentId, @Valid @RequestBody CommentDto commentRequest) {
+        return commentService.updateComment(postId, commentId, commentRequest);
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<String> deleteComment(@PathVariable Integer postId, @PathVariable Integer commentId) {
+    public String deleteComment(@PathVariable Integer postId, @PathVariable Integer commentId) {
         commentService.deleteComment(postId, commentId);
-        return ResponseEntity.ok("Comment was successfully deleted");
+        return "Comment was successfully deleted";
     }
 }

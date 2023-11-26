@@ -20,7 +20,7 @@ import static com.dadr.socialnetwork.mapper.PostMapper.MAPPER;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PostService {
     PostRepository postRepository;
-    private Post validatePost(Integer postId) {
+    private Post validateExistingPost(Integer postId) {
         return postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post id not found"));
     }
 
@@ -32,20 +32,22 @@ public class PostService {
     }
 
     public PostDto updatePost(Integer postId, PostDto postDto) {
-        Post post = validatePost(postId);
+        Post post = validateExistingPost(postId);
+
         post.setImage(postDto.image());
         post.setContent(postDto.content());
+
         Post newPost = postRepository.save(post);
         return MAPPER.mapToDto(newPost);
     }
 
     public void deletePost(Integer postId) {
-        Post post = validatePost(postId);
+        Post post = validateExistingPost(postId);
         postRepository.delete(post);
     }
 
     public PostDto findPostById(Integer postId) {
-        Post post = validatePost(postId);
+        Post post = validateExistingPost(postId);
         return MAPPER.mapToDto(post);
     }
 

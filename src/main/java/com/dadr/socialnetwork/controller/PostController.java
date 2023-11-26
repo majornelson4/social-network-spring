@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.List;
 @RequestMapping("api/posts")
 public class PostController {
     PostService postService;
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postRequest) {
         PostDto postDto = postService.createPost(postRequest);
@@ -25,21 +28,20 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<PostDto> updatePost(@PathVariable Integer postId, @Valid @RequestBody PostDto postRequest) {
-        PostDto postDto = postService.updatePost(postId, postRequest);
-        return ResponseEntity.ok(postDto);
+    public PostDto updatePost(@PathVariable Integer postId, @Valid @RequestBody PostDto postRequest) {
+        return postService.updatePost(postId, postRequest);
     }
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable Integer postId) {
+    public String deletePost(@PathVariable Integer postId) {
         postService.deletePost(postId);
-        return ResponseEntity.ok("Post deleted successfully");
+        return "Post deleted successfully";
     }
     @GetMapping
-    public ResponseEntity<List<PostDto>> findAllPosts() {
-        return ResponseEntity.ok(postService.findAllPosts());
+    public List<PostDto> findAllPosts() {
+        return postService.findAllPosts();
     }
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDto> findPostById(@PathVariable Integer postId) {
-        return ResponseEntity.ok(postService.findPostById(postId));
+    public PostDto findPostById(@PathVariable Integer postId) {
+        return postService.findPostById(postId);
     }
 }

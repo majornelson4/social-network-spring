@@ -4,6 +4,7 @@ import com.dadr.socialnetwork.exception.ApplicationApiException;
 import com.dadr.socialnetwork.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -47,6 +48,15 @@ public class ServiceExceptionHandler {
         });
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionDetails> handleAccessDeniedException(AccessDeniedException exception,
+                                                                   WebRequest request) {
+        ExceptionDetails exceptionDetails = new ExceptionDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionDetails, HttpStatus.UNAUTHORIZED);
+
     }
 
 }
