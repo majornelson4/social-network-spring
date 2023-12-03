@@ -2,6 +2,7 @@ package com.dadr.socialnetwork.exception.handler;
 
 import com.dadr.socialnetwork.exception.ApplicationApiException;
 import com.dadr.socialnetwork.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,12 +17,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
+@Slf4j
 public class ServiceExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ExceptionDetails> handleResourceNotFound(ResourceNotFoundException exception,
                                                                    WebRequest request) {
         ExceptionDetails exceptionDetails = new ExceptionDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false));
+        log.error("Error: {}", exceptionDetails);
+
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_FOUND);
     }
 
@@ -29,6 +33,8 @@ public class ServiceExceptionHandler {
     public ResponseEntity<ExceptionDetails> handleAppAPIException(ApplicationApiException exception,
                                                                   WebRequest request) {
         ExceptionDetails exceptionDetails = new ExceptionDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false));
+        log.error("Error: {}", exceptionDetails);
+
         return new ResponseEntity<>(exceptionDetails, HttpStatus.BAD_REQUEST);
     }
 
@@ -36,6 +42,7 @@ public class ServiceExceptionHandler {
     public ResponseEntity<ExceptionDetails> handleGeneralException(RuntimeException runtimeException,
                                                                    WebRequest request) {
         ExceptionDetails exceptionDetails = new ExceptionDetails(LocalDateTime.now(), runtimeException.getMessage(), request.getDescription(false));
+        log.error("Error: {}", exceptionDetails);
         return new ResponseEntity<>(exceptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -46,6 +53,7 @@ public class ServiceExceptionHandler {
             String message = err.getDefaultMessage();
             errors.put(field, message);
         });
+        log.error("Error: {}", errors);
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
@@ -55,6 +63,7 @@ public class ServiceExceptionHandler {
     public ResponseEntity<ExceptionDetails> handleAccessDeniedException(AccessDeniedException exception,
                                                                    WebRequest request) {
         ExceptionDetails exceptionDetails = new ExceptionDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false));
+        log.error("Error: {}", exceptionDetails);
         return new ResponseEntity<>(exceptionDetails, HttpStatus.UNAUTHORIZED);
 
     }

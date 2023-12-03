@@ -3,29 +3,27 @@ package com.dadr.socialnetwork.controller;
 import com.dadr.socialnetwork.dto.CommentDto;
 import com.dadr.socialnetwork.service.CommentService;
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("api/posts/{postId}/comments")
 public class CommentController {
-    CommentService commentService;
+    private final CommentService commentService;
 
     @GetMapping("/{commentId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public CommentDto findCommentById(@PathVariable Integer postId, @PathVariable Integer commentId) {
-        CommentDto commentDto = commentService.findCommentById(postId, commentId);
-        return commentDto;
+        return commentService.findCommentById(postId, commentId);
     }
     @GetMapping
-    public Set<CommentDto> findAllComments(@PathVariable Integer postId) {
+    public Set<CommentDto> findAllCommentsByPostId(@PathVariable Integer postId) {
         return commentService.findAllComments(postId);
     }
     @PostMapping
@@ -43,4 +41,5 @@ public class CommentController {
         commentService.deleteComment(postId, commentId);
         return "Comment was successfully deleted";
     }
+
 }

@@ -2,8 +2,6 @@ package com.dadr.socialnetwork.controller;
 
 import com.dadr.socialnetwork.dto.LoginDto;
 import com.dadr.socialnetwork.dto.RegisterDto;
-import com.dadr.socialnetwork.entity.User;
-import com.dadr.socialnetwork.repository.UserRepository;
 import com.dadr.socialnetwork.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

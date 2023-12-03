@@ -2,6 +2,8 @@ package com.dadr.socialnetwork.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 import java.time.LocalDateTime;
 import java.util.Set;

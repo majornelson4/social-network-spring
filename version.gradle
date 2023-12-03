@@ -1,0 +1,7 @@
+ext {
+    versions = [
+            'springdoc':'2.2.0',
+            'mapstruct':'1.5.5.Final',
+            'lommapbinding':'0.2.0'
+    ]
+}

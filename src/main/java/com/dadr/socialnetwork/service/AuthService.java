@@ -2,6 +2,7 @@ package com.dadr.socialnetwork.service;
 
 import com.dadr.socialnetwork.dto.LoginDto;
 import com.dadr.socialnetwork.dto.RegisterDto;
+import com.dadr.socialnetwork.entity.Role;
 import com.dadr.socialnetwork.entity.User;
 import com.dadr.socialnetwork.exception.ApplicationApiException;
 import com.dadr.socialnetwork.repository.UserRepository;
@@ -33,7 +34,7 @@ public class AuthService {
     }
 
     public String register(RegisterDto registerDto) {
-        if(userRepository.existsByUsername(registerDto.username())) {
+        if (userRepository.existsByUsername(registerDto.username())) {
             throw new ApplicationApiException("User already exists with this username: " + registerDto.username());
         }
 
@@ -43,6 +44,7 @@ public class AuthService {
                 .dateOfBirth(registerDto.dateOfBirth())
                 .username(registerDto.username())
                 .password(passwordEncoder.encode(registerDto.password()))
+                .role(Role.USER)
                 .build();
         userRepository.save(user);
 

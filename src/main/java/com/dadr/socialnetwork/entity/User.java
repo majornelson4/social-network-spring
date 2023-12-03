@@ -1,9 +1,9 @@
 package com.dadr.socialnetwork.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,6 +16,8 @@ import java.util.List;
 @Builder
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(exclude = {"posts", "followers", "follows"})
+@EqualsAndHashCode(exclude = {"posts", "followers", "follows"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +33,24 @@ public class User {
     @Column(nullable = false)
     LocalDate dateOfBirth;
 
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "followers_follows",
             joinColumns = @JoinColumn(name = "user_follower_id"),
             inverseJoinColumns = @JoinColumn(name = "user_follows_id"))
     @Builder.Default
     List<User> followers = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "followers")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "followers", fetch = FetchType.EAGER)
     @Builder.Default
     List<User> follows = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author")
+    @Builder.Default
+    List<Post> posts = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 32)
+    Role role;
 }

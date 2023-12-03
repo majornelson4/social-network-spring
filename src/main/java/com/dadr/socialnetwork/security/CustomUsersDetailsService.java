@@ -29,7 +29,7 @@ public class CustomUsersDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Collections.singleton(new SimpleGrantedAuthority("USER"))
+                Collections.singleton(user.getRole())
         );
     }
 }
