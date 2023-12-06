@@ -13,12 +13,12 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/follow")
+    @PutMapping("/follow")
     public String followUserByUsername(@RequestParam("username") String username) {
         return userService.followUser(username);
     }
 
-    @PostMapping("/unfollow")
+    @PutMapping("/unfollow")
     public String unfollowUserByUsername(@RequestParam("username") String username) {
         return userService.unfollowUser(username);
     }

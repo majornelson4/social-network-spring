@@ -9,6 +9,5 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
     UserMapper MAPPER = Mappers.getMapper(UserMapper.class);
     User mapToEntity(ReadUserDto userDto);
-
     ReadUserDto mapToDto(User user);
 }

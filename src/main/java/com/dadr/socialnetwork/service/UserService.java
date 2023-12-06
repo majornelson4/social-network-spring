@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class UserService {
         User origin = validateUser(getUsernameOfAuthenticatedUser());
 
         if(origin.getUsername().equals(toFollow.getUsername())) throw new ApplicationApiException("You cannot follow yourself");
-        if(origin.getFollows().contains(toFollow) && toFollow.getFollowers().contains(origin)) throw new ApplicationApiException("You already follow this user");
+        if(origin.getFollows().contains(toFollow) && toFollow.getFollowers().contains(origin)) throw new ApplicationApiException("You're already following this user");
 
         origin.getFollows().add(toFollow);
         toFollow.getFollowers().add(origin);
@@ -37,7 +38,7 @@ public class UserService {
         userRepository.save(origin);
         userRepository.save(toFollow);
 
-        return "You successfully followed user.";
+        return "You have successfully followed user.";
     }
 
     public List<ReadUserDto> findAllUsers() {
@@ -49,7 +50,7 @@ public class UserService {
         User loggedInUser = validateUser(getUsernameOfAuthenticatedUser());
 
         if(loggedInUser.getUsername().equals(toUnfollow.getUsername())) throw new ApplicationApiException("You cannot unfollow yourself");
-        if(!(loggedInUser.getFollows().contains(toUnfollow) && toUnfollow.getFollowers().contains(loggedInUser))) throw new ApplicationApiException("You already has unfollowed this user");
+        if(!(loggedInUser.getFollows().contains(toUnfollow) && toUnfollow.getFollowers().contains(loggedInUser))) throw new ApplicationApiException("You have already unfollowed this user");
 
         loggedInUser.getFollows().remove(toUnfollow);
         toUnfollow.getFollowers().remove(loggedInUser);
@@ -57,7 +58,7 @@ public class UserService {
         userRepository.save(loggedInUser);
         userRepository.save(toUnfollow);
 
-        return "You successfully unfollowed user.";
+        return "You have successfully unfollowed user.";
     }
 
     private User validateUser(String username) {
